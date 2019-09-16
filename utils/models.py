@@ -42,7 +42,7 @@ def get_discriminator_model(image_shape):
     
     return model
 
-def get_gan_model(g_model, d_model, image_shape):
+def get_gan_model(g_model, d_model, image_shape, L1_loss_lambda=100):
     """Combined generator and discriminator model. Used for updating the generator."""
     d_model.trainable = False
     input_src_image = Input(shape=image_shape)
@@ -53,7 +53,7 @@ def get_gan_model(g_model, d_model, image_shape):
     # src image as input, generated image and real/fake classification as output
     model = Model(input_src_image, [dis_out, gen_out], name='gan_model')
     opt = Adam(lr=0.0002, beta_1=0.5)
-    model.compile(loss=['binary_crossentropy', 'mae'], optimizer=opt, loss_weights=[1,100])
+    model.compile(loss=['binary_crossentropy', 'mae'], optimizer=opt, loss_weights=[1, L1_loss_lambda])
     
     return model
 
