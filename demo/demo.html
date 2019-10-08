@@ -1,5 +1,7 @@
 <html>
 <head>
+  <!-- python3 -m http.server 8001
+      http://0.0.0.0:8001/demo.html-->
   <title>Pix2Pix Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -7,6 +9,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
   <script src="sketchpad.js"></script>
 
   <style>
@@ -75,70 +78,88 @@
   </div>
 
   <script>
-      var sketchpadSource;
-      var sketchpadTarget;
+    var sketchpadSource;
+    var sketchpadTarget;
+    var model;
 
-      $(document).ready(function() {
-          sketchpadSource = new Sketchpad({
-              element: "#sketchpad-source",
-              width: 256,
-              height: 256,
-              penSize: 1
-          });
+    (async () => {
+      model = await tf.loadLayersModel('http://0.0.0.0:8001/models/gen_model/model.json');
+    })();
 
-          sketchpadTarget = new Sketchpad({
-              element: "#sketchpad-target",
-              width: 256,
-              height: 256,
-              readOnly: true
-          });
+    $(document).ready(function() {
+      sketchpadSource = new Sketchpad({
+        element: "#sketchpad-source",
+        width: 256,
+        height: 256,
+        penSize: 1,
+        imageUrl: "source_images/01.jpg"
       });
 
-      function clearSketchPad(sketchpad) {
-          sketchpad.clear();
-          sketchpad.strokes = [];
-          sketchpad.undoHistory = [];
-      }
+      sketchpadTarget = new Sketchpad({
+        element: "#sketchpad-target",
+        width: 256,
+        height: 256,
+        readOnly: true
+      });
 
-      function clearSketchPads(event) {
-          clearSketchPad(sketchpadSource);
-      }
+      loadSourceImage("source_images/01.jpg")
+    });
 
-      function brush(event) {
-        sketchpadSource.penSize = 2;
-        sketchpadSource.color = $("#color-picker").val();
-        $("#color-picker").removeClass("d-none");
-      }
+    function clearSketchPad(sketchpad) {
+      sketchpad.clear();
+      sketchpad.strokes = [];
+      sketchpad.undoHistory = [];
+      sketchpad.image = null;
+    }
 
-      function eraser(event) {
-        sketchpadSource.penSize = 8;
-        sketchpadSource.color = "#ffffff";
-        $("#color-picker").addClass("d-none");
-      }
+    function clearSketchPads(event) {
+      clearSketchPad(sketchpadSource);
+    }
 
-      function generate(event) {
-        let imgData = sketchpadSource.context.getImageData(
-          0, 0, sketchpadSource._width, sketchpadSource._height);
-        sketchpadTarget.context.putImageData(imgData, 0, 0);
-      }
+    function brush(event) {
+      sketchpadSource.penSize = 2;
+      sketchpadSource.color = $("#color-picker").val();
+      $("#color-picker").removeClass("d-none");
+    }
 
-      function pencil(event) {
-        sketchpadSource.penSize = 1;
-        sketchpadSource.color = "#000000";
-        $("#color-picker").addClass("d-none");
-      }
+    function eraser(event) {
+      sketchpadSource.penSize = 8;
+      sketchpadSource.color = "#ffffff";
+      $("#color-picker").addClass("d-none");
+    }
 
-      function redo() {
-          sketchpadSource.redo();
-      }
+    function generate(event) {
+      let imgData = sketchpadSource.context.getImageData(
+        0, 0, sketchpadSource._width, sketchpadSource._height);
+      sketchpadTarget.context.putImageData(imgData, 0, 0);
+    }
 
-      function size(event) {
-          sketchpadSource.penSize = $(event.target).val();
-      }
+    function loadSourceImage(url) {
+      let image = new Image();
+      image.onload = function () {
+          sketchpadSource.image = this;
+          sketchpadSource.redraw();
+      };
+      image.src = url;
+    }
 
-      function undo() {
-          sketchpadSource.undo();
-      }
+    function pencil(event) {
+      sketchpadSource.penSize = 1;
+      sketchpadSource.color = "#000000";
+      $("#color-picker").addClass("d-none");
+    }
+
+    function redo() {
+      sketchpadSource.redo();
+    }
+
+    function size(event) {
+      sketchpadSource.penSize = $(event.target).val();
+    }
+
+    function undo() {
+      sketchpadSource.undo();
+    }
   </script>
 </body>
 </html>

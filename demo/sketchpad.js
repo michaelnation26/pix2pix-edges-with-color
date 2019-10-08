@@ -69,6 +69,9 @@ function Sketchpad(config) {
   // Animation function calls
   this.animateIds = [];
 
+  // Init image
+  this.image = null;
+
   // Set sketching state
   this._sketching = false;
 
@@ -243,6 +246,14 @@ Sketchpad.prototype.drawStroke = function(stroke) {
 };
 
 Sketchpad.prototype.redraw = function(strokes) {
+  if (!strokes) {
+    strokes = this.strokes;
+  }
+
+  if (this.image != null) {
+    this.context.drawImage(this.image, 0, 0);
+  }
+
   for (var i = 0; i < strokes.length; i++) {
     this.drawStroke(strokes[i]);
   }
@@ -297,8 +308,9 @@ Sketchpad.prototype.undo = function() {
   var stroke = this.strokes.pop();
   if (stroke) {
     this.undoHistory.push(stroke);
-    this.redraw(this.strokes);
   }
+
+  this.redraw(this.strokes);
 };
 
 Sketchpad.prototype.redo = function() {
