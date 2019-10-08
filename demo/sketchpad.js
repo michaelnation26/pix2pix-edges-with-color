@@ -212,6 +212,9 @@ Sketchpad.prototype.reset = function() {
   this.canvas.width = this._width;
   this.canvas.height = this._height;
   this.context = this.canvas.getContext('2d');
+  // init background to white
+  this.context.fillStyle = "white";
+  this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
   // Setup event listeners
   this.redraw(this.strokes);

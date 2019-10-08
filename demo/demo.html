@@ -30,17 +30,17 @@
     <div class="row">
       <div class="col-1">
         <div class="list-group" role="tablist">
-          <a class="list-group-item list-group-item-action text-center active" data-toggle="list"
+          <a class="list-group-item list-group-item-action text-center p-2 active" data-toggle="list"
               role="tab" aria-controls="pencil" alt="pencil" title="pencil" onclick="pencil()">
-            <img class="w-75" src="icons/pencil.svg">
+            edges
           </a>
-          <a class="list-group-item list-group-item-action text-center" data-toggle="list"
+          <a class="list-group-item list-group-item-action text-center p-2" data-toggle="list"
               role="tab" aria-controls="eraser" alt="eraser" title="eraser" onclick="eraser()">
-            <img class="w-75" src="icons/eraser.svg">
+            eraser
           </a>
-          <a class="list-group-item list-group-item-action text-center" data-toggle="list"
+          <a class="list-group-item list-group-item-action text-center p-2" data-toggle="list"
               role="tab" aria-controls="brush" alt="color brush" title="color brush" onclick="brush()">
-            <img class="w-75" src="icons/brush.svg">
+            color
           </a>
           <input id="color-picker" type="color" class="border-0 w-100 d-none" style="height:40px"
               value="#ff0000" onchange="brush()">
@@ -50,7 +50,7 @@
         <canvas class="sketchpad" id="sketchpad-source"><canvas>
       </div>
       <div class="col text-center">
-        <button class="btn btn-primary">generate</button>
+        <button class="btn btn-primary" onclick="generate()">generate</button>
       </div>
       <div class="col text-center">
         <canvas class="sketchpad" id="sketchpad-target"><canvas>
@@ -76,12 +76,21 @@
 
   <script>
       var sketchpadSource;
+      var sketchpadTarget;
+
       $(document).ready(function() {
           sketchpadSource = new Sketchpad({
               element: "#sketchpad-source",
               width: 256,
               height: 256,
               penSize: 1
+          });
+
+          sketchpadTarget = new Sketchpad({
+              element: "#sketchpad-target",
+              width: 256,
+              height: 256,
+              readOnly: true
           });
       });
 
@@ -105,6 +114,12 @@
         sketchpadSource.penSize = 8;
         sketchpadSource.color = "#ffffff";
         $("#color-picker").addClass("d-none");
+      }
+
+      function generate(event) {
+        let imgData = sketchpadSource.context.getImageData(
+          0, 0, sketchpadSource._width, sketchpadSource._height);
+        sketchpadTarget.context.putImageData(imgData, 0, 0);
       }
 
       function pencil(event) {
