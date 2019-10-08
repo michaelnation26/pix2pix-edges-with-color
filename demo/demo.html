@@ -1,0 +1,126 @@
+<html>
+<head>
+  <title>Pix2Pix Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="sketchpad.js"></script>
+
+  <style>
+    .sketchpad {
+      background: #FFF;
+      width: 256;
+      height: 256;
+      border-radius: 2px;
+
+      -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+      -moz-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+      box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.75);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-1">
+        <div class="list-group" role="tablist">
+          <a class="list-group-item list-group-item-action text-center active" data-toggle="list"
+              role="tab" aria-controls="pencil" alt="pencil" title="pencil" onclick="pencil()">
+            <img class="w-75" src="icons/pencil.svg">
+          </a>
+          <a class="list-group-item list-group-item-action text-center" data-toggle="list"
+              role="tab" aria-controls="eraser" alt="eraser" title="eraser" onclick="eraser()">
+            <img class="w-75" src="icons/eraser.svg">
+          </a>
+          <a class="list-group-item list-group-item-action text-center" data-toggle="list"
+              role="tab" aria-controls="brush" alt="color brush" title="color brush" onclick="brush()">
+            <img class="w-75" src="icons/brush.svg">
+          </a>
+          <input id="color-picker" type="color" class="border-0 w-100 d-none" style="height:40px"
+              value="#ff0000" onchange="brush()">
+        </div>
+      </div>
+      <div class="col text-center">
+        <canvas class="sketchpad" id="sketchpad-source"><canvas>
+      </div>
+      <div class="col text-center">
+        <button class="btn btn-primary">generate</button>
+      </div>
+      <div class="col text-center">
+        <canvas class="sketchpad" id="sketchpad-target"><canvas>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button type="button" class="btn btn-secondary" onclick="undo()">undo</button>
+            <button type="button" class="btn btn-secondary" onclick="redo()">redo</button>
+          </div>
+          <div class="btn-group mr-2" role="group" aria-label="Second group">
+            <button type="button" class="btn btn-secondary" onclick="clearSketchPads()">clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+
+  <script>
+      var sketchpadSource;
+      $(document).ready(function() {
+          sketchpadSource = new Sketchpad({
+              element: "#sketchpad-source",
+              width: 256,
+              height: 256,
+              penSize: 1
+          });
+      });
+
+      function clearSketchPad(sketchpad) {
+          sketchpad.clear();
+          sketchpad.strokes = [];
+          sketchpad.undoHistory = [];
+      }
+
+      function clearSketchPads(event) {
+          clearSketchPad(sketchpadSource);
+      }
+
+      function brush(event) {
+        sketchpadSource.penSize = 2;
+        sketchpadSource.color = $("#color-picker").val();
+        $("#color-picker").removeClass("d-none");
+      }
+
+      function eraser(event) {
+        sketchpadSource.penSize = 8;
+        sketchpadSource.color = "#ffffff";
+        $("#color-picker").addClass("d-none");
+      }
+
+      function pencil(event) {
+        sketchpadSource.penSize = 1;
+        sketchpadSource.color = "#000000";
+        $("#color-picker").addClass("d-none");
+      }
+
+      function redo() {
+          sketchpadSource.redo();
+      }
+
+      function size(event) {
+          sketchpadSource.penSize = $(event.target).val();
+      }
+
+      function undo() {
+          sketchpadSource.undo();
+      }
+  </script>
+</body>
+</html>
