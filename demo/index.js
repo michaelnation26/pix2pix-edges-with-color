@@ -1,11 +1,22 @@
-const IMAGE_WIDTH = 256;
-const IMAGE_HEIGHT = 256;
+const IMG_WIDTH = 256;
+const IMG_HEIGHT = 256;
+const IMG_BASE_URL = "source_images/";
+const IMG_FILENAMES = [
+  "01.jpg",
+  "109572.9.jpg",
+  "7144144.151.jpg",
+  "7423232.2125.jpg",
+  "7498391.406782.jpg",
+  "7525601.367468.jpg",
+];
+
 var sketchpadSource;
 var sketchpadTarget;
 var model;
+var img_idx = -1;
 
 (async () => {
-  model = await tf.loadLayersModel('http://0.0.0.0:8001/models/gen_model/model.json');
+  model = await tf.loadLayersModel('http://0.0.0.0:8001/gen_model/model.json');
   $("#generate").prop("disabled", false);
   $("#generate").html("generate");
 })();
@@ -13,38 +24,38 @@ var model;
 $(document).ready(function() {
   sketchpadSource = new Sketchpad({
     element: "#sketchpad-source",
-    width: IMAGE_WIDTH,
-    height: IMAGE_HEIGHT,
-    penSize: 1,
-    imageUrl: "source_images/01.jpg"
+    width: IMG_WIDTH,
+    height: IMG_HEIGHT,
+    penSize: 1
   });
 
   sketchpadTarget = new Sketchpad({
     element: "#sketchpad-target",
-    width: IMAGE_WIDTH,
-    height: IMAGE_HEIGHT,
+    width: IMG_WIDTH,
+    height: IMG_HEIGHT,
     readOnly: true
   });
 
-  loadSourceImage("source_images/01.jpg")
+  const imgUrl = getImgSourceUrl();
+  loadSourceImg(imgUrl);
 });
-
-function clearSketchPad(sketchpad) {
-  sketchpad.clear();
-  sketchpad.strokes = [];
-  sketchpad.undoHistory = [];
-  sketchpad.image = null;
-}
-
-function clearSketchPads(event) {
-  clearSketchPad(sketchpadSource);
-  clearSketchPad(sketchpadTarget);
-}
 
 function brush(event) {
   sketchpadSource.penSize = 2;
   sketchpadSource.color = $("#color-picker").val();
   $("#color-picker").removeClass("d-none");
+}
+
+function clearSketchPad(sketchpad) {
+  sketchpad.clear();
+  sketchpadSource.strokes = [];
+  sketchpadSource.undoHistory = [];
+  sketchpadSource.image = null;
+}
+
+function clearSketchPads(event) {
+  clearSketchPad(sketchpadSource);
+  clearSketchPad(sketchpadTarget);
 }
 
 function eraser(event) {
@@ -54,41 +65,53 @@ function eraser(event) {
 }
 
 function generate(event) {
-  let imgSourceData = sketchpadSource.context.getImageData(
-    0, 0, sketchpadSource._width, sketchpadSource._height);
+  const imgSource = getImgSource();
+  const imgTarget = generateImgTarget(imgSource);
 
-  let imgSource = preprocessImg(imgSourceData);
-  let imgsSource = tf.expandDims(imgSource); // batch of 1
-  let imgsTarget = model.predict(imgsSource);
-  let imgTarget = tf.squeeze(imgsTarget);
-  imgTarget = tf.div(tf.add(imgTarget, tf.scalar(1)), tf.scalar(2));
-  imgTarget = tf.mul(imgTarget, tf.scalar(255)).toInt();
-  imgTarget = imgTarget.dataSync();
-
-  var imageData = sketchpadSource.context.createImageData(
+  const imageData = sketchpadSource.context.createImageData(
     sketchpadSource._width, sketchpadSource._height);
   updateImageDataWithImg3D(imageData, imgTarget);
   sketchpadTarget.context.putImageData(imageData, 0, 0);
 }
 
-// Flat 3D Image (RGB) -> ImageData (RGBA)
-function updateImageDataWithImg3D(imageData, img3D) {
-  let data = imageData.data;
-  for (let img3DIdx = 0, imgDataIdx = 0; img3DIdx < img3D.length; img3DIdx += 3, imgDataIdx += 4) {
-    data[imgDataIdx] = img3D[img3DIdx];
-    data[imgDataIdx+1] = img3D[img3DIdx+1];
-    data[imgDataIdx+2] = img3D[img3DIdx+2];
-    data[imgDataIdx+3] = 255;
-  }
+function generateImgTarget(imgSource) {
+  const imgsSource = tf.expandDims(imgSource); // batch of 1
+  const imgsTarget = model.predict(imgsSource);
+  let imgTarget = tf.squeeze(imgsTarget);
+  imgTarget = tf.div(tf.add(imgTarget, tf.scalar(1)), tf.scalar(2));
+  imgTarget = tf.mul(imgTarget, tf.scalar(255)).toInt();
+
+  return imgTarget.dataSync();
 }
 
-function loadSourceImage(url) {
-  let image = new Image();
+function getImgSource() {
+  const imgSourceData = sketchpadSource.context.getImageData(
+    0, 0, sketchpadSource._width, sketchpadSource._height);
+
+  return preprocessImg(imgSourceData);
+}
+
+function getImgSourceUrl() {
+  // increment img index
+  img_idx = (img_idx + 1) % IMG_FILENAMES.length;
+
+  return IMG_BASE_URL + IMG_FILENAMES[img_idx];
+}
+
+function loadSourceImg(url) {
+  const image = new Image();
   image.onload = function () {
       sketchpadSource.image = this;
       sketchpadSource.redraw();
   };
   image.src = url;
+}
+
+function newImg() {
+  clearSketchPads();
+
+  const imgUrl = getImgSourceUrl();
+  loadSourceImg(imgUrl);
 }
 
 function pencil(event) {
@@ -107,17 +130,6 @@ function preprocessImg(imgData) {
   return preprocessedInput;
 }
 
-function preprocessImg2(imgData) {
-  let data = imgData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    data[i] = (data[i] - 127.5) / 127.5;
-    data[i+1] = (data[i+1] - 127.5) / 127.5;
-    data[i+2] = (data[i+2] - 127.5) / 127.5;
-  }
-
-  return imgData;
-}
-
 function redo() {
   sketchpadSource.redo();
 }
@@ -128,4 +140,15 @@ function size(event) {
 
 function undo() {
   sketchpadSource.undo();
+}
+
+// Flat 3D Image (RGB) -> ImageData (RGBA)
+function updateImageDataWithImg3D(imageData, img3D) {
+  const data = imageData.data;
+  for (let img3DIdx = 0, imgDataIdx = 0; img3DIdx < img3D.length; img3DIdx += 3, imgDataIdx += 4) {
+    data[imgDataIdx] = img3D[img3DIdx];
+    data[imgDataIdx+1] = img3D[img3DIdx+1];
+    data[imgDataIdx+2] = img3D[img3DIdx+2];
+    data[imgDataIdx+3] = 255;
+  }
 }

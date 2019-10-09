@@ -1,3 +1,6 @@
+// The original sketchpad.js file was downloaded from https://yiom.github.io/sketchpad/
+// Slight modifications were made.
+
 //    The MIT License (MIT)
 //
 //    Copyright (c) 2014-2016 YIOM
@@ -250,7 +253,7 @@ Sketchpad.prototype.redraw = function(strokes) {
     strokes = this.strokes;
   }
 
-  if (this.image != null) {
+  if (this.image) {
     this.context.drawImage(this.image, 0, 0);
   }
 
@@ -300,7 +303,8 @@ Sketchpad.prototype.cancelAnimation = function() {
 };
 
 Sketchpad.prototype.clear = function() {
-  this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  this.context.fillStyle = "white";
+  this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
 Sketchpad.prototype.undo = function() {
