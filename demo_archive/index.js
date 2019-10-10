@@ -78,8 +78,8 @@ function generateImgTarget(imgSource) {
   const imgsSource = tf.expandDims(imgSource); // batch of 1
   const imgsTarget = model.predict(imgsSource);
   let imgTarget = tf.squeeze(imgsTarget);
-  imgTarget = tf.div(tf.add(imgTarget, tf.scalar(1)), tf.scalar(2));
-  imgTarget = tf.mul(imgTarget, tf.scalar(255)).toInt();
+  imgTarget = tf.div(tf.add(imgTarget, tf.scalar(1.0)), tf.scalar(2.0));
+  imgTarget = tf.mul(imgTarget, tf.scalar(255.0)).toInt();
 
   return imgTarget.dataSync();
 }
