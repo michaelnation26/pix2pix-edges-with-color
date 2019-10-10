@@ -1,37 +1,9 @@
-## Welcome to GitHub Pages
+# pix2pix-edges-with-color
 
-You can use the [editor on GitHub](https://github.com/michaelnation26/pix2pix-edges-with-color/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Extension of the [pix2pix (edges2shoes) implementation](https://github.com/phillipi/pix2pix).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+In the original implementation, the input image is black and white, only containing the edges of the shoe. After the GAN model is trained, there is no way to control the color of the output image.
 
-### Markdown
+In this project, color is added to the input image during training. Resulting in a generator model where the color in the output image corresponds to the color in the input image.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/michaelnation26/pix2pix-edges-with-color/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### THE CODE FOR THIS PROECT IS COMPLETE. THE WRITEUP FOR THIS PROJECT WILL BE ADDED SOON. 
