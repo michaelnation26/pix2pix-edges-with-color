@@ -10,9 +10,9 @@ In this project, color is added to the input image during training. Resulting in
 
 Only the `Sneakers and Athletic Shoes` images from the [UT Zappos50K](http://vision.cs.utexas.edu/projects/finegrained/utzap50k/) dataset were used, resulting in 12,860 training examples.
 
-Canny edge detection was used to extract the edges of the shoes. The edges are 1px in width.
+Canny edge detection was used to extract the edges of the shoes. The edges are 1 pixel in width.
 
-350 points were randomly sampled from all non-white pixels in the original image. For each point, the RGB values of the surrounding pixels are averaged, resulting in a 3px X 3px square. The 350 color points are overlayed onto the black and white edges image.
+350 points were randomly sampled from all non-white pixels in the original image. For each point, the RGB values of the surrounding pixels are averaged, resulting in a 3x3 pixels square. The 350 color points are overlayed onto the black and white edges image.
 
 ![preprocessing steps](images/training_data_preprocess_steps.png)
 
