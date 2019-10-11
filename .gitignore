@@ -1,6 +1,5 @@
 data
 .DS_Store
-utils/hed_model/hed_pretrained_bsds.caffemodel
 .ipynb_checkpoints
 __pycache__
-demo_archive/gen_model/*
+demo_archive/gen_model
