@@ -24,3 +24,6 @@ VALIDATION_DIR = 'data/validation'
 VALIDATION_SOURCE_DIR = f'{VALIDATION_DIR}/source'
 VALIDATION_TARGET_DIR = f'{VALIDATION_DIR}/target'
 VALIDATION_BATCH_SIZE = 6
+
+PREPROCESSED_DATASET_URL = 'https://github.com/michaelnation26/pix2pix-edges-with-color/releases/download/v1.0/data.zip'
+TRAINED_GENERATOR_MODEL_URL = 'https://github.com/michaelnation26/pix2pix-edges-with-color/releases/download/v1.0/gen_model.h5'
