@@ -6,6 +6,12 @@ In the original implementation, the input image is black and white, only contain
 
 In this project, color is added to the input image during training. Resulting in a generator model where the color in the output image corresponds to the color in the input image.
 
+## Demo
+
+<a href="https://www.youtube.com/watch?v=jElHHexi30I">
+  <img src="https://img.youtube.com/vi/jElHHexi30I/0.jpg" alt="Demo on YouTube" width="240" height="180" border="10" />
+</a>
+
 ## Training Data
 
 Only the `Sneakers and Athletic Shoes` images from the [UT Zappos50K](http://vision.cs.utexas.edu/projects/finegrained/utzap50k/) dataset were used, resulting in 12,860 training examples. All images were resized from 136x136 to 256x256.
@@ -39,8 +45,27 @@ The GAN model was trained for 30 epochs. After every epoch, the generator model 
 
 ## Results
 
-The first color scheme for each shoe matches the original and was used during training. The second color scheme for each shoe was chosen by me and was not used during training for those particular shoe models.
+The color schemes for inputs `1a` and `2a` matches the original and was used during training. The color schemes for inputs `1b` and `2b` were chosen by me and were not used during training for those particular shoe models.
 
 ![results](images/results.png)
 
-### THE CODE FOR THIS PROECT IS COMPLETE. THE WRITEUP FOR THIS PROJECT IS STILL IN PROGRESS.
+
+### Drawn from Scratch
+
+Unlike the images directly above, the image below did not use Canny edge detection to draw edges from an existing shoe. The shoe design was "made up" and the edges were drawn manually.
+
+![results](images/scratch.png)
+
+## Getting Started
+
+First clone this repo. Then pip install the following python packages: tensorflow, keras, pillow, opencv-python, matplotlib.
+
+### Retrain GAN Model
+
+Open the [train_gan Notebook](https://github.com/michaelnation26/pix2pix-edges-with-color/blob/master/train_gan.ipynb). Besides pip installing the necessary python packages, there is no other setup steps needed. The Notebook will automatically download the training set for you. Go ahead and run the Notebook. Using a GPU is highly recommended.
+
+### Using the Model
+
+For generating images with the trained model, using a CPU is fine since the model is only generating one image at a time.
+
+Open the [test_gan Notebook](https://github.com/michaelnation26/pix2pix-edges-with-color/blob/master/test_gan.ipynb). The Notebook will automatically download the trained generator model. There are some templates in the images folder you can use to get started. If you're using Mac, Paintbrush is an easy to use application to draw and color your input images. Make sure the black edges are 1px in width and the colors are 3px in width. For Paintbrush, the stroke sizes are 1 and 2 respectively.
