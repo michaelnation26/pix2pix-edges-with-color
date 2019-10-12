@@ -45,7 +45,7 @@ The GAN model was trained for 30 epochs. After every epoch, the generator model 
 
 ## Results
 
-The color schemes for inputs `1a` and `2a` matches the original and was used during training. The color schemes for inputs `1b` and `2b` were chosen by me and were not used during training for those particular shoe models.
+The color schemes for inputs `1a` and `2a` matches the original and were used during training. The color schemes for inputs `1b` and `2b` were chosen by me and were not used during training for those particular shoe models.
 
 ![results](images/results.png)
 
