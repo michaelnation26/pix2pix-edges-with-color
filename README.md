@@ -49,13 +49,6 @@ The color schemes for inputs `1a` and `2a` matches the original and were used du
 
 ![results](images/results.png)
 
-
-### Drawn from Scratch
-
-Unlike the images directly above, the image below did not use Canny edge detection to draw edges from an existing shoe. The shoe design was "made up" and the edges were drawn manually.
-
-![results](images/scratch.png)
-
 ## Getting Started
 
 First clone this repo. Then pip install the following python packages: tensorflow, keras, pillow, opencv-python, matplotlib.
