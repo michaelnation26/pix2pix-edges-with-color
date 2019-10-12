@@ -39,4 +39,8 @@ The GAN model was trained for 30 epochs. After every epoch, the generator model 
 
 ## Results
 
+The first color scheme for each shoe matches the original and was used during training. The second color scheme for each shoe was chosen by me and was not used during training for those particular shoe models.
+
+![results](images/results.png)
+
 ### THE CODE FOR THIS PROECT IS COMPLETE. THE WRITEUP FOR THIS PROJECT IS STILL IN PROGRESS.

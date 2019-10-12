@@ -2,5 +2,4 @@ data
 .DS_Store
 .ipynb_checkpoints
 __pycache__
-demo_archive/gen_model
 /models
