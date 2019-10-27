@@ -1,3 +1,8 @@
+"""
+Keras implementation of Pix2Pix from Jason Brownlee's tutorial.
+https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/
+"""
+
 from keras.initializers import RandomNormal
 from keras.layers import Activation, BatchNormalization, Concatenate, Conv2D, Conv2DTranspose, Dropout, LeakyReLU
 from keras.models import Input, Model
