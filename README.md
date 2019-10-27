@@ -26,7 +26,7 @@ Canny edge detection was used to extract the edges of the shoes. The edges are 1
 
 ### Pix2Pix GAN Model
 
-Jason Browniee's [Keras implementation](https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/) of the Pix2Pix GAN was used.
+Jason Brownlee's [Keras implementation](https://machinelearningmastery.com/how-to-develop-a-pix2pix-gan-for-image-to-image-translation/) of the Pix2Pix GAN was used.
 
 ### Number of Color Points
 
